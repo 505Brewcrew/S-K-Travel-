@@ -56,6 +56,27 @@
             border-radius: 10px;
             display: inline-block;
         }
+        .results {
+            background-color: white;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        .#recommendationsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .recommendation {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .recommendation img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -64,16 +85,18 @@
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact Us</a>
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <button onclick="performSearch()">Search</button>
+            <input type="text" id="searchField" placeholder="Enter keyword">
+            <button id="searchButton">Search</button>
             <button onclick="resetSearch()">Reset</button>
+            <div id="results"></div>
         </div>
         </nav>
     <div class="intro">
         <h1>Welcome to SK Travel!</h1>
         <p>We are a couple obsessed with travel and are here to help start your obession!</p>
     </div>
-    <div id="results"></div>
+    <div id="resultsContainer"></div>
         <script src="travel_recommendation.js"></script>
+        <div id="results"></div>
 </body>
 </html>
