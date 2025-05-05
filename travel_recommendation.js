@@ -1,48 +1,73 @@
-// Path to your JSON file
-const jsonFilePath = './travel_recommendation_api.json';
+// travel_recommendation.js
 
-// Get references to the input and buttons
-const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
-const resetButton = document.getElementById('resetButton');
+// Function to fetch recommendations from the JSON file
+async function fetchRecommendations() {
+    try {
+        const response = await fetch('travel_recommendation_api.json');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
-// Fetch data from the JSON file
-fetch(jsonFilePath)
-  .then(response => response.json())
-  .then(data => {
-    // Add event listener for the search button
-    searchButton.addEventListener('click', () => {
-      const query = searchInput.value.toLowerCase(); // Convert input to lowercase
-      const filteredRecommendations = data.filter(recommendation =>
-        recommendation.name.toLowerCase().includes(query)
-      );
+// Function to perform the search based on user input
+async function performSearch() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const recommendations = await fetchRecommendations();
 
-      // Clear previous results
-      document.getElementById('results').innerHTML = '';
+    // Define accepted keywords and their variations
+    const acceptedKeywords = {
+        beaches: ['beach', 'beaches'],
+        temples: ['temple', 'temples'],
+        countries: ['country', 'countries']
+    };
 
-      // Display the filtered recommendations
-      filteredRecommendations.forEach(recommendation => {
-        const recommendationContainer = document.createElement('div');
-        recommendationContainer.className = 'recommendation';
+    // Find the matching keyword
+    let matchedKeyword = null;
+    for (const [key, variations] of Object.entries(acceptedKeywords)) {
+        if (variations.includes(searchInput)) {
+            matchedKeyword = key;
+            break;
+        }
+    }
 
-        const placeName = document.createElement('h2');
-        placeName.textContent = recommendation.name;
-        recommendationContainer.appendChild(placeName);
+    if (matchedKeyword) {
+        const filteredRecommendations = recommendations.filter(item =>
+            item.category.toLowerCase() === matchedKeyword
+        );
+        displayRecommendations(filteredRecommendations);
+    } else {
+        displayRecommendations([]);
+    }
+}
 
-        const image = document.createElement('img');
-        image.src = recommendation.imageUrl;
-        recommendationContainer.appendChild(image);
+// Function to display the recommendations on the webpage
+function displayRecommendations(recommendations) {
+    const recommendationsDiv = document.getElementById('recommendations');
+    recommendationsDiv.innerHTML = '';
 
-        document.getElementById('results').appendChild(recommendationContainer);
-      });
+    if (recommendations.length === 0) {
+        recommendationsDiv.innerHTML = '<p>No results found.</p>';
+        return;
+    }
+
+    recommendations.forEach(item => {
+        const recommendationElement = document.createElement('div');
+        recommendationElement.innerHTML = `
+            <h3>${item.name}</h3>
+            <img src="${item.imageUrl}" alt="${item.name}" style="width:100px;height:100px;">
+            <p>${item.description}</p>
+        `;
+        recommendationsDiv.appendChild(recommendationElement);
     });
+}
 
-    // Add event listener for the reset button
-    resetButton.addEventListener('click', () => {
-      searchInput.value = ''; // Clear the input field
-      document.getElementById('results').innerHTML = ''; // Clear the search results
-    });
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
-  });
+// Function to reset the search input and clear results
+function resetSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('recommendations').innerHTML = '';
+}
