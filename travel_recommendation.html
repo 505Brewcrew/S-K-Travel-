@@ -56,27 +56,6 @@
             border-radius: 10px;
             display: inline-block;
         }
-        .results {
-            background-color: white;
-            padding: 20px;
-            display: inline-block;
-        }
-
-        .#recommendationsContainer {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .recommendation {
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 200px;
-            text-align: center;
-        }
-        .recommendation img {
-            max-width: 100%;
-            height: auto;
-        }
     </style>
 </head>
 <body>
@@ -85,10 +64,10 @@
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact Us</a>
         <div class="search-container">
-            <input type="text" id="searchField" placeholder="Enter keyword">
-            <button id="searchButton">Search</button>
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button onclick="performSearch()">Search</button>
             <button onclick="resetSearch()">Reset</button>
-            <div id="results"></div>
+        </nav>
         </div>
         </nav>
     <div class="intro">
